@@ -25,7 +25,7 @@ class CardResourceTest {
 
     @Test
     fun `GET cards preview should return HTML string`() {
-        whenever(cardUsecasePort.getPreview(anyOrNull(), anyOrNull(), anyOrNull()))
+        whenever(cardUsecasePort.getPreview(anyOrNull()))
             .thenReturn("<html>Preview Card</html>")
 
         mockMvc.perform(get("/cards/preview"))
@@ -36,7 +36,7 @@ class CardResourceTest {
     @Test
     fun `GET cards render should return PNG image byte array`() {
         val dummyPng = byteArrayOf(13, 10, 26, 10)
-        whenever(cardUsecasePort.renderCardPng(anyOrNull(), anyOrNull(), anyOrNull()))
+        whenever(cardUsecasePort.renderCardPng(anyOrNull()))
             .thenReturn(dummyPng)
 
         mockMvc.perform(get("/cards/render"))
@@ -48,7 +48,7 @@ class CardResourceTest {
     @Test
     fun `GET cards preview with dutyId parameter should pass dutyId to usecase`() {
         val dutyId = UUID.randomUUID()
-        whenever(cardUsecasePort.getPreview(eq(dutyId), anyOrNull(), anyOrNull()))
+        whenever(cardUsecasePort.getPreview(eq(dutyId)))
             .thenReturn("<html>Preview for Duty</html>")
 
         mockMvc.perform(get("/cards/preview").param("dutyId", dutyId.toString()))
@@ -60,7 +60,7 @@ class CardResourceTest {
     fun `GET cards render with dutyId path variable should render PNG for specific duty`() {
         val dutyId = UUID.randomUUID()
         val dummyPng = byteArrayOf(1, 2, 3, 4)
-        whenever(cardUsecasePort.renderCardPng(eq(dutyId), anyOrNull(), anyOrNull()))
+        whenever(cardUsecasePort.renderCardPng(eq(dutyId)))
             .thenReturn(dummyPng)
 
         mockMvc.perform(get("/cards/render/$dutyId"))

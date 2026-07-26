@@ -23,21 +23,18 @@ class CardResource(
      * Accepts duty ID as either path variable (`/cards/preview/{dutyId}`) or query parameter (`/cards/preview?dutyId=...`).
      * Defaults to the actual month's GIRA_ABERTA duty if no duty ID is specified.
      */
-    @GetMapping(value = ["{dutyId}/preview"])
+    @GetMapping(value = ["preview", "{dutyId}/preview"])
     fun preview(
-        @RequestParam(name = "dutyId") dutyId: UUID,
-    ): String = cardUsecase.getPreview(dutyId = dutyId)
+        @PathVariable(name = "dutyId", required = false) dutyIdPath: UUID?,
+        @RequestParam(name = "dutyId", required = false) dutyIdParam: UUID?,
+    ): String = cardUsecase.getPreview(dutyId = dutyIdPath ?: dutyIdParam)
 
-    /**
-     * Endpoint to render and export the card PNG image.
-     * Accepts duty ID as either path variable (`/cards/render/{dutyId}`) or query parameter (`/cards/render?dutyId=...`).
-     * Defaults to the actual month's GIRA_ABERTA duty if no duty ID is specified.
-     */
-    @GetMapping(value = ["{dutyId}/render"], produces = [MediaType.IMAGE_PNG_VALUE])
+    @GetMapping(value = ["render", "{dutyId}/render", "render/{dutyId}"], produces = [MediaType.IMAGE_PNG_VALUE])
     fun generateCard(
-        @PathVariable(name = "dutyId", required = false) dutyId: UUID,
+        @PathVariable(name = "dutyId", required = false) dutyIdPath: UUID?,
+        @RequestParam(name = "dutyId", required = false) dutyIdParam: UUID?,
     ): ResponseEntity<ByteArray> {
-        val pngBytes = cardUsecase.renderCardPng(dutyId = dutyId)
+        val pngBytes = cardUsecase.renderCardPng(dutyId = dutyIdPath ?: dutyIdParam)
         return ResponseEntity
             .ok()
             .contentType(MediaType.IMAGE_PNG)

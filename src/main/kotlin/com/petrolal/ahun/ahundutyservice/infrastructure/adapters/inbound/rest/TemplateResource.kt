@@ -26,7 +26,7 @@ class TemplateResource(
      */
     @GetMapping
     fun list(
-        @RequestParam(name = "themeId") themeId: UUID,
+        @RequestParam(name = "themeId", required = false) themeId: UUID? = null,
     ): List<Template> {
         if (themeId != null) {
             return templateUsecase.findByThemeId(themeId)
