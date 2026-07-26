@@ -19,7 +19,7 @@ import java.util.UUID
  */
 @Tag(name = "Duties", description = "The endpoint to manage duties")
 @RestController
-@RequestMapping(value = ["/duties", "/duty"])
+@RequestMapping("/duty")
 class DutyResource(
     private val dutyUsecase: DutyUsecase,
     private val dutyModelAssembler: DutyModelAssembler

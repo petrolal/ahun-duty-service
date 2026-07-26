@@ -17,14 +17,6 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: none
-
-telegram:
-  bot-token: ${TELEGRAM_BOT_TOKEN:dummy_token}
-  chat-id: ${TELEGRAM_CHAT_ID:dummy_chat_id}
-
-google:
-  credentials: ${GOOGLE_CREDENTIALS:dummy_credentials}
-
 ahun:
   cards:
     templates-path: ${CARDS_TEMPLATES_PATH:/home/petrolal/Documents/AhunDocs}

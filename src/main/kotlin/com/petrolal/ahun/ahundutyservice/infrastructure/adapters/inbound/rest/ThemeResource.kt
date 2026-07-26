@@ -13,7 +13,7 @@ import java.util.*
  */
 @Tag(name = "Themes", description = "Theme for the selected Duty and card")
 @RestController
-@RequestMapping(value = ["/themes", "/theme"])
+@RequestMapping( "/theme")
 class ThemeResource(
     private val themeUsecase: ThemeUsecase,
 ) {
