@@ -23,7 +23,7 @@ class ThemeEntity(
     @Column(nullable = true)
     var updatedAt: LocalDateTime?,
 
-    ) {
+) {
     companion object {
         fun toEntity(theme: Theme): ThemeEntity =
             ThemeEntity(

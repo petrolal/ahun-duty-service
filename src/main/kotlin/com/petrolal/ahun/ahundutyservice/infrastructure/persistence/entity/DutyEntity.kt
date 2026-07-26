@@ -49,7 +49,7 @@ class DutyEntity(
     @Column(nullable = true)
     var updatedAt: LocalDateTime?,
 
-    ) {
+) {
     companion object {
         fun toDomain(dutyEntity: DutyEntity): Duty =
             Duty(

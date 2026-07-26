@@ -17,5 +17,5 @@ data class Template(
     val name: String,
     val imagePath: String,
     val theme: Theme? = null,
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = LocalDateTime.now(),
 )
