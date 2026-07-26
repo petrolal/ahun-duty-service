@@ -25,7 +25,9 @@ class TemplateResource(
      * List all templates, optionally filtered by theme ID query parameter.
      */
     @GetMapping
-    fun list(@RequestParam(name = "themeId", required = false) themeId: UUID?): List<Template> {
+    fun list(
+        @RequestParam(name = "themeId") themeId: UUID,
+    ): List<Template> {
         if (themeId != null) {
             return templateUsecase.findByThemeId(themeId)
         }
@@ -36,8 +38,9 @@ class TemplateResource(
      * Get a specific template by ID.
      */
     @GetMapping("/{id}")
-    fun findById(@PathVariable("id") id: UUID): Template =
-        templateUsecase.findById(id)
+    fun findById(
+        @PathVariable("id") id: UUID,
+    ): Template = templateUsecase.findById(id)
 
     /**
      * Create/Upload a new card template with a PNG background image.
@@ -46,7 +49,7 @@ class TemplateResource(
     fun create(
         @RequestParam("name") name: String,
         @RequestParam(name = "themeId", required = false) themeId: UUID?,
-        @RequestParam("file") file: MultipartFile
+        @RequestParam("file") file: MultipartFile,
     ): ResponseEntity<Template> {
         val created = templateUsecase.create(name = name, themeId = themeId, file = file)
         return ResponseEntity.status(HttpStatus.CREATED).body(created)
@@ -56,24 +59,20 @@ class TemplateResource(
      * Update an existing card template and optional PNG background image.
      * Accepts ID as either path variable (`/templates/{id}`) or query parameter (`/templates?id=...`).
      */
-    @PutMapping(value = ["", "/{id}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PutMapping(value = ["/{id}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun update(
-        @PathVariable(name = "id", required = false) pathId: UUID?,
-        @RequestParam(name = "id", required = false) queryId: UUID?,
+        @PathVariable(name = "id") id: UUID,
         @RequestParam(name = "name", required = false) name: String?,
         @RequestParam(name = "themeId", required = false) themeId: UUID?,
-        @RequestParam(name = "file", required = false) file: MultipartFile?
-    ): Template {
-        val id = pathId ?: queryId ?: throw BadRequestException("Template ID must be provided in URL path or query parameter")
-        return templateUsecase.update(id = id, name = name, themeId = themeId, file = file)
-    }
+        @RequestParam(name = "file", required = false) file: MultipartFile?,
+    ): Template = templateUsecase.update(id = id, name = name, themeId = themeId, file = file)
 
     /**
      * Delete a template by ID.
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(@PathVariable("id") id: UUID) {
-        templateUsecase.delete(id)
-    }
+    fun delete(
+        @PathVariable("id") id: UUID,
+    ) = templateUsecase.delete(id)
 }

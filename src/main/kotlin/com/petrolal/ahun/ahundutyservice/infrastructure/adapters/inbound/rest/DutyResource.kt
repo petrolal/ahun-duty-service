@@ -33,14 +33,15 @@ class DutyResource(
     @GetMapping
     fun findAll(
         @RequestParam(name = "theme", required = false) theme: String?,
-        @RequestParam(name = "dutyType", required = false) dutyType: DutyTypeEnum?
+        @RequestParam(name = "dutyType", required = false) dutyType: DutyTypeEnum?,
     ): CollectionModel<EntityModel<Duty>> {
-        val duties = when {
-            !theme.isNullOrBlank() && dutyType != null -> dutyUsecase.findByThemeNameAndDutyType(theme, dutyType)
-            !theme.isNullOrBlank() -> dutyUsecase.findByThemeName(theme)
-            dutyType != null -> dutyUsecase.findByDutyType(dutyType)
-            else -> dutyUsecase.findAll()
-        }
+        val duties =
+            when {
+                !theme.isNullOrBlank() && dutyType != null -> dutyUsecase.findByThemeNameAndDutyType(theme, dutyType)
+                !theme.isNullOrBlank() -> dutyUsecase.findByThemeName(theme)
+                dutyType != null -> dutyUsecase.findByDutyType(dutyType)
+                else -> dutyUsecase.findAll()
+            }
 
         return dutyModelAssembler.toCollectionModel(duties)
     }
@@ -50,7 +51,9 @@ class DutyResource(
      * Returns a HAL compliant [EntityModel] with hypermedia links for self, card render, and card preview.
      */
     @GetMapping("/{id}")
-    fun findById(@PathVariable("id") id: UUID): EntityModel<Duty> {
+    fun findById(
+        @PathVariable("id") id: UUID,
+    ): EntityModel<Duty> {
         val duty = dutyUsecase.findById(id)
         return dutyModelAssembler.toModel(duty)
     }
@@ -60,7 +63,9 @@ class DutyResource(
      * Returns HTTP 201 Created with a Location header and HATEOAS HAL representation.
      */
     @PostMapping
-    fun create(@RequestBody requestDto: DutyRequestDto): ResponseEntity<EntityModel<Duty>> {
+    fun create(
+        @RequestBody requestDto: DutyRequestDto,
+    ): ResponseEntity<EntityModel<Duty>> {
         val createdDuty = dutyUsecase.create(requestDto)
         val entityModel = dutyModelAssembler.toModel(createdDuty)
 
@@ -73,13 +78,11 @@ class DutyResource(
      * Endpoint to update an existing duty assignment.
      * Accepts ID as either path variable (`/duty/{id}`) or query parameter (`/duty?id=...`).
      */
-    @PutMapping(value = ["", "/{id}"])
+    @PutMapping(value = ["/{id}"])
     fun update(
-        @PathVariable(name = "id", required = false) pathId: UUID?,
-        @RequestParam(name = "id", required = false) queryId: UUID?,
-        @RequestBody requestDto: DutyRequestDto
+        @PathVariable(name = "id", required = false) id: UUID,
+        @RequestBody requestDto: DutyRequestDto,
     ): EntityModel<Duty> {
-        val id = pathId ?: queryId ?: throw BadRequestException("Duty ID must be provided in URL path or query parameter")
         val updatedDuty = dutyUsecase.update(id, requestDto)
         return dutyModelAssembler.toModel(updatedDuty)
     }

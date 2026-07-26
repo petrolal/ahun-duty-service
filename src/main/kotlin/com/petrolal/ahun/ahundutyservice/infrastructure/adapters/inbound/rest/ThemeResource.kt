@@ -16,14 +16,16 @@ import java.util.*
 @RestController
 @RequestMapping("theme")
 class ThemeResource(
-    private val themeUsecase: ThemeUsecase
+    private val themeUsecase: ThemeUsecase,
 ) {
 
     /**
      * Endpoint to list all themes, optionally filtered by a name query parameter.
      */
     @GetMapping
-    fun list(@RequestParam(name = "name", required = false) name: String?): List<Theme> {
+    fun list(
+        @RequestParam(name = "name", required = false) name: String?,
+    ): List<Theme> {
         if (!name.isNullOrEmpty()) {
             return themeUsecase.filterByName(name)
         }
@@ -34,27 +36,25 @@ class ThemeResource(
      * Endpoint to get a specific theme by ID.
      */
     @GetMapping("/{id}")
-    fun findById(@PathVariable("id") id: UUID): Theme =
-        themeUsecase.findById(id)
+    fun findById(
+        @PathVariable("id") id: UUID,
+    ): Theme = themeUsecase.findById(id)
 
     /**
      * Endpoint to create a new theme.
      */
     @PostMapping
-    fun create(@RequestBody themeRequestDto: ThemeRequestDto): Theme =
-        themeUsecase.create(themeRequestDto)
+    fun create(
+        @RequestBody themeRequestDto: ThemeRequestDto,
+    ): Theme = themeUsecase.create(themeRequestDto)
 
     /**
      * Endpoint to update an existing theme.
      * Accepts ID as either path variable (`/theme/{id}`) or query parameter (`/theme?id=...`).
      */
-    @PutMapping(value = ["", "/{id}"])
+    @PutMapping(value = ["/{id}"])
     fun update(
-        @PathVariable(name = "id", required = false) pathId: UUID?,
-        @RequestParam(name = "id", required = false) queryId: UUID?,
-        @RequestBody themeRequestDto: ThemeRequestDto
-    ): Theme {
-        val id = pathId ?: queryId ?: throw BadRequestException("Theme ID must be provided in URL path or query parameter")
-        return themeUsecase.update(id, themeRequestDto)
-    }
+        @PathVariable(name = "id", required = false) id: UUID,
+        @RequestBody themeRequestDto: ThemeRequestDto,
+    ): Theme = themeUsecase.update(id, themeRequestDto)
 }

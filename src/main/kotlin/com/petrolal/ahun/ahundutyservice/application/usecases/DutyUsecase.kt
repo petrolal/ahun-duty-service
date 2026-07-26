@@ -30,8 +30,7 @@ class DutyUsecase (
      * @param themeName Theme name to query.
      * @return List of matching [Duty] domain models.
      */
-    fun findByThemeName(themeName: String): List<Duty> =
-        repository.findByThemeName(themeName)
+    fun findByThemeName(themeName: String): List<Duty> = repository.findByThemeName(themeName)
 
     /**
      * Finds all duties associated with a specific duty type.
@@ -39,8 +38,7 @@ class DutyUsecase (
      * @param dutyType The [DutyTypeEnum] to filter by.
      * @return List of matching [Duty] domain models.
      */
-    fun findByDutyType(dutyType: DutyTypeEnum): List<Duty> =
-        repository.findByDutyType(dutyType)
+    fun findByDutyType(dutyType: DutyTypeEnum): List<Duty> = repository.findByDutyType(dutyType)
 
     /**
      * Finds all duties associated with a specific theme name and duty type.
@@ -49,16 +47,17 @@ class DutyUsecase (
      * @param dutyType The [DutyTypeEnum] to filter by.
      * @return List of matching [Duty] domain models.
      */
-    fun findByThemeNameAndDutyType(themeName: String, dutyType: DutyTypeEnum): List<Duty> =
-        repository.findByThemeNameAndDutyType(themeName, dutyType)
+    fun findByThemeNameAndDutyType(
+        themeName: String,
+        dutyType: DutyTypeEnum,
+    ): List<Duty> = repository.findByThemeNameAndDutyType(themeName, dutyType)
 
     /**
      * Lists all duties in the system.
      *
      * @return List of all [Duty] domain models.
      */
-    fun findAll(): List<Duty> =
-        repository.findAll()
+    fun findAll(): List<Duty> = repository.findAll()
 
     /**
      * Finds a specific duty by its ID.

@@ -29,27 +29,25 @@ class DutyEventResource(
      * Endpoint to get a specific duty event by ID.
      */
     @GetMapping("/{id}")
-    fun findById(@PathVariable("id") id: UUID): DutyEvent =
-        dutyEventUsecase.findById(id)
+    fun findById(
+        @PathVariable("id") id: UUID,
+    ): DutyEvent = dutyEventUsecase.findById(id)
 
     /**
      * Endpoint to create one or more new duty events.
      */
     @PostMapping
-    fun create(@RequestBody event: List<DutyEventRequestDto>): List<DutyEvent> =
-        dutyEventUsecase.save(event)
+    fun create(
+        @RequestBody event: List<DutyEventRequestDto>,
+    ): List<DutyEvent> = dutyEventUsecase.save(event)
 
     /**
      * Endpoint to update an existing duty event.
      * Accepts ID as either path variable (`/duty-events/{id}`) or query parameter (`/duty-events?id=...`).
      */
-    @PutMapping(value = ["", "/{id}"])
+    @PutMapping(value = ["/{id}"])
     fun update(
-        @PathVariable(name = "id", required = false) pathId: UUID?,
-        @RequestParam(name = "id", required = false) queryId: UUID?,
-        @RequestBody requestDto: DutyEventRequestDto
-    ): DutyEvent {
-        val id = pathId ?: queryId ?: throw BadRequestException("DutyEvent ID must be provided in URL path or query parameter")
-        return dutyEventUsecase.update(id, requestDto)
-    }
+        @PathVariable(name = "id", required = false) id: UUID,
+        @RequestBody requestDto: DutyEventRequestDto,
+    ): DutyEvent = dutyEventUsecase.update(id, requestDto)
 }
