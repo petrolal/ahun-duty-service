@@ -2,6 +2,7 @@ package com.petrolal.ahun.ahundutyservice.infrastructure.adapters.inbound.rest
 
 import com.petrolal.ahun.ahundutyservice.application.ports.CardUsecasePort
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,25 +20,25 @@ class CardResource(
 ) {
 
     /**
-     * Endpoint to preview the card HTML.
-     * Accepts duty ID as either path variable (`/cards/preview/{dutyId}`) or query parameter (`/cards/preview?dutyId=...`).
-     * Defaults to the actual month's GIRA_ABERTA duty if no duty ID is specified.
+     * Endpoint to preview the card HTML for a specific duty ID.
      */
-    @GetMapping(value = ["preview", "{dutyId}/preview"])
+    @GetMapping("{dutyId}/preview")
     fun preview(
-        @PathVariable(name = "dutyId", required = false) dutyIdPath: UUID?,
-        @RequestParam(name = "dutyId", required = false) dutyIdParam: UUID?,
-    ): String = cardUsecase.getPreview(dutyId = dutyIdPath ?: dutyIdParam)
+        @PathVariable("dutyId") dutyId: UUID,
+    ): String = cardUsecase.getPreview(dutyId = dutyId)
 
-    @GetMapping(value = ["render", "{dutyId}/render", "render/{dutyId}"], produces = [MediaType.IMAGE_PNG_VALUE])
+    /**
+     * Endpoint to render and export the card PNG image for a specific duty ID.
+     */
+    @GetMapping("{dutyId}/render", produces = [MediaType.IMAGE_PNG_VALUE])
     fun generateCard(
-        @PathVariable(name = "dutyId", required = false) dutyIdPath: UUID?,
-        @RequestParam(name = "dutyId", required = false) dutyIdParam: UUID?,
+        @PathVariable("dutyId") dutyId: UUID,
     ): ResponseEntity<ByteArray> {
-        val pngBytes = cardUsecase.renderCardPng(dutyId = dutyIdPath ?: dutyIdParam)
+        val pngBytes = cardUsecase.renderCardPng(dutyId = dutyId)
         return ResponseEntity
             .ok()
             .contentType(MediaType.IMAGE_PNG)
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"card-$dutyId.png\"")
             .body(pngBytes)
     }
 }

@@ -24,48 +24,27 @@ class CardResourceTest {
     }
 
     @Test
-    fun `GET cards preview should return HTML string`() {
-        whenever(cardUsecasePort.getPreview(anyOrNull()))
-            .thenReturn("<html>Preview Card</html>")
-
-        mockMvc.perform(get("/cards/preview"))
-            .andExpect(status().isOk)
-            .andExpect(content().string("<html>Preview Card</html>"))
-    }
-
-    @Test
-    fun `GET cards render should return PNG image byte array`() {
-        val dummyPng = byteArrayOf(13, 10, 26, 10)
-        whenever(cardUsecasePort.renderCardPng(anyOrNull()))
-            .thenReturn(dummyPng)
-
-        mockMvc.perform(get("/cards/render"))
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.IMAGE_PNG))
-            .andExpect(content().bytes(dummyPng))
-    }
-
-    @Test
-    fun `GET cards preview with dutyId parameter should pass dutyId to usecase`() {
+    fun `GET cards preview with dutyId path variable should return HTML string`() {
         val dutyId = UUID.randomUUID()
         whenever(cardUsecasePort.getPreview(eq(dutyId)))
             .thenReturn("<html>Preview for Duty</html>")
 
-        mockMvc.perform(get("/cards/preview").param("dutyId", dutyId.toString()))
+        mockMvc.perform(get("/cards/$dutyId/preview"))
             .andExpect(status().isOk)
             .andExpect(content().string("<html>Preview for Duty</html>"))
     }
 
     @Test
-    fun `GET cards render with dutyId path variable should render PNG for specific duty`() {
+    fun `GET cards render with dutyId path variable should render and download PNG`() {
         val dutyId = UUID.randomUUID()
         val dummyPng = byteArrayOf(1, 2, 3, 4)
         whenever(cardUsecasePort.renderCardPng(eq(dutyId)))
             .thenReturn(dummyPng)
 
-        mockMvc.perform(get("/cards/render/$dutyId"))
+        mockMvc.perform(get("/cards/$dutyId/render"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.IMAGE_PNG))
+            .andExpect(header().string("Content-Disposition", "attachment; filename=\"card-$dutyId.png\""))
             .andExpect(content().bytes(dummyPng))
     }
 }
