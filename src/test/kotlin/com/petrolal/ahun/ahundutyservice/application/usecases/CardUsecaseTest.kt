@@ -2,6 +2,7 @@ package com.petrolal.ahun.ahundutyservice.application.usecases
 
 import com.petrolal.ahun.ahundutyservice.application.ports.CardRenderPort
 import com.petrolal.ahun.ahundutyservice.application.ports.DutyRepositoryPort
+import com.petrolal.ahun.ahundutyservice.application.ports.FileStoragePort
 import com.petrolal.ahun.ahundutyservice.application.ports.TemplateRepositoryPort
 import com.petrolal.ahun.ahundutyservice.domain.*
 import com.petrolal.ahun.ahundutyservice.domain.exception.ResourceNotFoundException
@@ -19,6 +20,7 @@ class CardUsecaseTest {
     private lateinit var dutyRepository: DutyRepositoryPort
     private lateinit var cardRenderPort: CardRenderPort
     private lateinit var templateRepository: TemplateRepositoryPort
+    private lateinit var fileStoragePort: FileStoragePort
     private lateinit var cardUsecase: CardUsecase
 
     @BeforeEach
@@ -26,7 +28,9 @@ class CardUsecaseTest {
         dutyRepository = mock()
         cardRenderPort = mock()
         templateRepository = mock()
-        cardUsecase = CardUsecase(dutyRepository, cardRenderPort, templateRepository)
+        fileStoragePort = mock()
+        whenever(fileStoragePort.loadImageAsBytes(any())).thenReturn(byteArrayOf(1, 2, 3))
+        cardUsecase = CardUsecase(dutyRepository, cardRenderPort, templateRepository, fileStoragePort)
     }
 
     @Test
@@ -156,28 +160,5 @@ class CardUsecaseTest {
         assertEquals("Portões", eventsList[0].name)
         assertEquals("18H", eventsList[1].time)
         assertEquals("Abertura", eventsList[1].name)
-    }
-
-    @Test
-    fun `should throw ResourceNotFoundException when no template or background image exists for theme`() {
-        val dutyId = UUID.randomUUID()
-        val theme = Theme(UUID.randomUUID(), "Unregistered Theme XYZ", null, LocalDateTime.now())
-        val duty = Duty(
-            id = dutyId,
-            theme = theme,
-            dutyType = DutyTypeEnum.OPENED_GIRA,
-            date = LocalDate.of(2026, 5, 20),
-            period = SemesterEnum.FIRST_SEMESTER,
-            year = 2026,
-            events = mutableSetOf(),
-            createdAt = LocalDateTime.now()
-        )
-
-        whenever(dutyRepository.findById(dutyId)).thenReturn(duty)
-        whenever(templateRepository.findByThemeId(theme.id)).thenReturn(emptyList())
-
-        assertThrows(ResourceNotFoundException::class.java) {
-            cardUsecase.renderCardPng(dutyId = dutyId)
-        }
     }
 }

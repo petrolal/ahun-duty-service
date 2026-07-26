@@ -3,7 +3,7 @@ kotlin = "2.3.21"
 springBoot = "4.1.0"
 springDependencyManagement = "1.1.7"
 springDocOpenapi = "3.0.3"
-playwright = "1.44.0"
+pdfbox = "3.0.4"
 flyingSaucerCore = "9.1.22"
 kotlinMockito = "5.4.0"
 
@@ -34,8 +34,9 @@ kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit
 jackson-module-kotlin = { group = "tools.jackson.module", name = "jackson-module-kotlin" }
 
 # Card generation
-microsoft-playwright = {group = "com.microsoft.playwright", name = "playwright", version.ref = "playwright" }
 xhtmlrenderer-flyingSaucerCore = { group = "org.xhtmlrenderer", name = "flying-saucer-core", version.ref = "flyingSaucerCore"}
+xhtmlrenderer-flyingSaucerPdfOpenpdf = { group = "org.xhtmlrenderer", name = "flying-saucer-pdf-openpdf", version.ref = "flyingSaucerCore"}
+apache-pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox"}
 
 # Test dependencies
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }

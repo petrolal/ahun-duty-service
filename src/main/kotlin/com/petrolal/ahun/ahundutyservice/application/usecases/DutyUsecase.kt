@@ -4,6 +4,7 @@ import com.petrolal.ahun.ahundutyservice.application.ports.DutyEventRepositoryPo
 import com.petrolal.ahun.ahundutyservice.application.ports.DutyRepositoryPort
 import com.petrolal.ahun.ahundutyservice.application.ports.ThemeRepositoryPort
 import com.petrolal.ahun.ahundutyservice.domain.Duty
+import com.petrolal.ahun.ahundutyservice.domain.DutyEvent
 import com.petrolal.ahun.ahundutyservice.domain.DutyTypeEnum
 import com.petrolal.ahun.ahundutyservice.domain.SemesterEnum
 import com.petrolal.ahun.ahundutyservice.domain.dto.DutyRequestDto
@@ -19,73 +20,33 @@ import java.util.*
  */
 @Service
 @Transactional(readOnly = true)
-class DutyUsecase (
+class DutyUsecase(
     private val repository: DutyRepositoryPort,
     private val repositoryTheme: ThemeRepositoryPort,
     private val repositoryDutyEvent: DutyEventRepositoryPort
 ) {
-    /**
-     * Finds all duties associated with a specific theme name.
-     *
-     * @param themeName Theme name to query.
-     * @return List of matching [Duty] domain models.
-     */
+
     fun findByThemeName(themeName: String): List<Duty> = repository.findByThemeName(themeName)
 
-    /**
-     * Finds all duties associated with a specific duty type.
-     *
-     * @param dutyType The [DutyTypeEnum] to filter by.
-     * @return List of matching [Duty] domain models.
-     */
     fun findByDutyType(dutyType: DutyTypeEnum): List<Duty> = repository.findByDutyType(dutyType)
 
-    /**
-     * Finds all duties associated with a specific theme name and duty type.
-     *
-     * @param themeName Theme name to query.
-     * @param dutyType The [DutyTypeEnum] to filter by.
-     * @return List of matching [Duty] domain models.
-     */
     fun findByThemeNameAndDutyType(
         themeName: String,
         dutyType: DutyTypeEnum,
     ): List<Duty> = repository.findByThemeNameAndDutyType(themeName, dutyType)
 
-    /**
-     * Lists all duties in the system.
-     *
-     * @return List of all [Duty] domain models.
-     */
     fun findAll(): List<Duty> = repository.findAll()
 
-    /**
-     * Finds a specific duty by its ID.
-     *
-     * @param id UUID of the duty.
-     * @return The [Duty] domain model.
-     * @throws ResourceNotFoundException If the duty is not found.
-     */
     fun findById(id: UUID): Duty =
         repository.findById(id)
             ?: throw ResourceNotFoundException("Duty with id $id not found")
 
-    /**
-     * Creates a new Duty assignment referencing an existing theme and multiple duty events.
-     *
-     * @param requestDto Details of the duty assignment, including theme and event IDs.
-     * @return The created [Duty] domain model.
-     * @throws ResourceNotFoundException If the referenced Theme or any referenced Event is not found.
-     */
     @Transactional
     fun create(requestDto: DutyRequestDto): Duty {
         val theme = repositoryTheme.findById(requestDto.themeId)
             ?: throw ResourceNotFoundException("Theme with id ${requestDto.themeId} not found")
 
-        val events = repositoryDutyEvent.findAllById(requestDto.eventIds)
-        if (events.size != requestDto.eventIds.size) {
-            throw ResourceNotFoundException("One or more events not found")
-        }
+        val allEvents = resolveEvents(requestDto)
 
         val calculatedPeriod = requestDto.period ?: SemesterEnum.from(requestDto.date)
         val calculatedYear = requestDto.date.year
@@ -98,7 +59,7 @@ class DutyUsecase (
             period = calculatedPeriod,
             description = requestDto.description,
             year = calculatedYear,
-            events = events.toMutableSet(),
+            events = allEvents.toMutableSet(),
             createdAt = LocalDateTime.now(),
             updatedAt = null,
         )
@@ -106,14 +67,6 @@ class DutyUsecase (
         return repository.create(duty)
     }
 
-    /**
-     * Updates an existing Duty assignment referencing a theme and duty events.
-     *
-     * @param id Unique identifier of the duty to update.
-     * @param requestDto Details of the updated duty assignment.
-     * @return The updated [Duty] domain model.
-     * @throws ResourceNotFoundException If the Duty, referenced Theme, or any referenced Event is not found.
-     */
     @Transactional
     fun update(
         id: UUID,
@@ -125,10 +78,7 @@ class DutyUsecase (
         val theme = repositoryTheme.findById(requestDto.themeId)
             ?: throw ResourceNotFoundException("Theme with id ${requestDto.themeId} not found")
 
-        val events = repositoryDutyEvent.findAllById(requestDto.eventIds)
-        if (events.size != requestDto.eventIds.size) {
-            throw ResourceNotFoundException("One or more events not found")
-        }
+        val allEvents = resolveEvents(requestDto)
 
         val calculatedPeriod = requestDto.period ?: SemesterEnum.from(requestDto.date)
         val calculatedYear = requestDto.date.year
@@ -140,10 +90,37 @@ class DutyUsecase (
             period = calculatedPeriod,
             description = requestDto.description,
             year = calculatedYear,
-            events = events.toMutableSet(),
+            events = allEvents.toMutableSet(),
             updatedAt = LocalDateTime.now()
         )
 
         return repository.update(id, updatedDuty)
+    }
+
+    private fun resolveEvents(requestDto: DutyRequestDto): List<DutyEvent> {
+        val existingEvents = if (requestDto.eventIds.isNotEmpty()) {
+            val fetched = repositoryDutyEvent.findAllById(requestDto.eventIds)
+            if (fetched.size != requestDto.eventIds.size) {
+                throw ResourceNotFoundException("One or more events not found")
+            }
+            fetched
+        } else emptyList()
+
+        val createdInlineEvents = if (!requestDto.inlineEvents.isNullOrEmpty()) {
+            val domainInline = requestDto.inlineEvents.map {
+                DutyEvent(
+                    id = UUID.randomUUID(),
+                    name = it.name,
+                    startedAt = it.startedAt,
+                    visibleInCard = it.visibleInCard,
+                    description = it.description,
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = null
+                )
+            }
+            repositoryDutyEvent.create(domainInline)
+        } else emptyList()
+
+        return existingEvents + createdInlineEvents
     }
 }

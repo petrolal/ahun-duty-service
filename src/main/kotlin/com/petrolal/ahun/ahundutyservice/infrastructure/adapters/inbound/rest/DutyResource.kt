@@ -4,7 +4,6 @@ import com.petrolal.ahun.ahundutyservice.application.usecases.DutyUsecase
 import com.petrolal.ahun.ahundutyservice.domain.Duty
 import com.petrolal.ahun.ahundutyservice.domain.DutyTypeEnum
 import com.petrolal.ahun.ahundutyservice.domain.dto.DutyRequestDto
-import com.petrolal.ahun.ahundutyservice.domain.exception.BadRequestException
 import com.petrolal.ahun.ahundutyservice.infrastructure.adapters.inbound.rest.assembler.DutyModelAssembler
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.hateoas.CollectionModel
@@ -18,9 +17,9 @@ import java.util.UUID
  * Inbound REST controller for managing Duty assignments.
  * Exposes endpoints for listing, finding, creating, and updating duty assignments with HATEOAS hypermedia controls.
  */
-@Tag(name = "Duty", description = "The endpoint to manage duties")
+@Tag(name = "Duties", description = "The endpoint to manage duties")
 @RestController
-@RequestMapping("/duty")
+@RequestMapping(value = ["/duties", "/duty"])
 class DutyResource(
     private val dutyUsecase: DutyUsecase,
     private val dutyModelAssembler: DutyModelAssembler
@@ -60,6 +59,7 @@ class DutyResource(
 
     /**
      * Endpoint to create a new duty assignment.
+     * Supports both existing event IDs and composite inline events.
      * Returns HTTP 201 Created with a Location header and HATEOAS HAL representation.
      */
     @PostMapping
@@ -76,11 +76,10 @@ class DutyResource(
 
     /**
      * Endpoint to update an existing duty assignment.
-     * Accepts ID as either path variable (`/duty/{id}`) or query parameter (`/duty?id=...`).
      */
-    @PutMapping(value = ["/{id}"])
+    @PutMapping("/{id}")
     fun update(
-        @PathVariable(name = "id", required = false) id: UUID,
+        @PathVariable(name = "id") id: UUID,
         @RequestBody requestDto: DutyRequestDto,
     ): EntityModel<Duty> {
         val updatedDuty = dutyUsecase.update(id, requestDto)

@@ -1,5 +1,6 @@
 package com.petrolal.ahun.ahundutyservice.application.usecases
 
+import com.petrolal.ahun.ahundutyservice.application.ports.FileStoragePort
 import com.petrolal.ahun.ahundutyservice.application.ports.TemplateRepositoryPort
 import com.petrolal.ahun.ahundutyservice.application.ports.ThemeRepositoryPort
 import com.petrolal.ahun.ahundutyservice.domain.Template
@@ -8,16 +9,17 @@ import com.petrolal.ahun.ahundutyservice.domain.exception.ResourceNotFoundExcept
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.UUID
 
+/**
+ * Application service orchestrating business logic for card background [Template]s.
+ */
 @Service
 @Transactional(readOnly = true)
 class TemplateUsecase(
     private val templateRepository: TemplateRepositoryPort,
-    private val themeRepository: ThemeRepositoryPort
+    private val themeRepository: ThemeRepositoryPort,
+    private val fileStoragePort: FileStoragePort,
 ) {
 
     fun findAll(): List<Template> = templateRepository.findAll()
@@ -78,15 +80,8 @@ class TemplateUsecase(
         val existing = findById(id)
         templateRepository.deleteById(id)
 
-        // Try deleting image file if custom
-        try {
-            val projectDir = System.getProperty("user.dir")
-            val targetFile = Paths.get(projectDir, "src/main/resources/static/images", existing.imagePath).toFile()
-            if (targetFile.exists() && targetFile.isFile && !existing.imagePath.startsWith("gira_") && !existing.imagePath.startsWith("feijoada_")) {
-                targetFile.delete()
-            }
-        } catch (_: Exception) {
-            // Ignore file deletion errors
+        if (!existing.imagePath.startsWith("gira_") && !existing.imagePath.startsWith("feijoada_")) {
+            fileStoragePort.deleteImage(existing.imagePath)
         }
     }
 
@@ -100,28 +95,6 @@ class TemplateUsecase(
             throw BadRequestException("Only PNG images are supported. File must be .png")
         }
 
-        val sanitizedFilename = sanitizeFilename(originalFilename)
-        val uniqueFilename = "${UUID.randomUUID().toString().substring(0, 8)}_${sanitizedFilename}"
-
-        val projectDir = System.getProperty("user.dir")
-        val primaryDir = Paths.get(projectDir, "src/main/resources/static/images")
-        val buildDir = Paths.get(projectDir, "build/resources/main/static/images")
-
-        val primaryTarget = primaryDir.resolve(uniqueFilename)
-        Files.createDirectories(primaryDir)
-        Files.write(primaryTarget, file.bytes)
-
-        if (Files.exists(buildDir)) {
-            val buildTarget = buildDir.resolve(uniqueFilename)
-            Files.write(buildTarget, file.bytes)
-        }
-
-        return uniqueFilename
-    }
-
-    private fun sanitizeFilename(filename: String): String {
-        val nameWithoutExt = filename.removeSuffix(".png").removeSuffix(".PNG")
-        val clean = nameWithoutExt.lowercase().replace(Regex("[^a-z0-9_]+"), "_").trim('_')
-        return if (clean.isBlank()) "template.png" else "${clean}.png"
+        return fileStoragePort.saveImage(originalFilename, file.bytes)
     }
 }

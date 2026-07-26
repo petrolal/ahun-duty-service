@@ -48,16 +48,16 @@ class DutyResourceTest {
 
         `when`(dutyUsecase.findById(dutyId)).thenReturn(duty)
 
-        mockMvc.perform(get("/duty/$dutyId"))
+        mockMvc.perform(get("/duties/$dutyId"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(dutyId.toString()))
             .andExpect(jsonPath("$.links[0].rel").value("self"))
-            .andExpect(jsonPath("$.links[0].href").value(endsWith("/duty/$dutyId")))
+            .andExpect(jsonPath("$.links[0].href").value(endsWith("/duties/$dutyId")))
             .andExpect(jsonPath("$.links[1].rel").value("card-render"))
-            .andExpect(jsonPath("$.links[1].href").value(endsWith("/cards/render/$dutyId")))
+            .andExpect(jsonPath("$.links[1].href").value(endsWith("/cards/$dutyId/render")))
             .andExpect(jsonPath("$.links[2].rel").value("card-preview"))
-            .andExpect(jsonPath("$.links[2].href").value(endsWith("/cards/preview/$dutyId")))
+            .andExpect(jsonPath("$.links[2].href").value(endsWith("/cards/$dutyId/preview")))
             .andExpect(jsonPath("$.links[3].rel").value("all-duties"))
-            .andExpect(jsonPath("$.links[3].href").value(endsWith("/duty")))
+            .andExpect(jsonPath("$.links[3].href").value(endsWith("/duties")))
     }
 }

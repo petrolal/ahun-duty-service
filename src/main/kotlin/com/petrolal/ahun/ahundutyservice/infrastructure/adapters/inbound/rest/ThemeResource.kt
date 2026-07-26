@@ -3,7 +3,6 @@ package com.petrolal.ahun.ahundutyservice.infrastructure.adapters.inbound.rest
 import com.petrolal.ahun.ahundutyservice.application.usecases.ThemeUsecase
 import com.petrolal.ahun.ahundutyservice.domain.Theme
 import com.petrolal.ahun.ahundutyservice.domain.dto.ThemeRequestDto
-import com.petrolal.ahun.ahundutyservice.domain.exception.BadRequestException
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -12,9 +11,9 @@ import java.util.*
  * Inbound REST controller for managing Themes.
  * Exposes endpoints for listing, finding, creating, and updating themes.
  */
-@Tag(name = "Theme", description = "Theme for the selected Duty and card")
+@Tag(name = "Themes", description = "Theme for the selected Duty and card")
 @RestController
-@RequestMapping("theme")
+@RequestMapping(value = ["/themes", "/theme"])
 class ThemeResource(
     private val themeUsecase: ThemeUsecase,
 ) {
@@ -50,11 +49,10 @@ class ThemeResource(
 
     /**
      * Endpoint to update an existing theme.
-     * Accepts ID as either path variable (`/theme/{id}`) or query parameter (`/theme?id=...`).
      */
-    @PutMapping(value = ["/{id}"])
+    @PutMapping("/{id}")
     fun update(
-        @PathVariable(name = "id", required = false) id: UUID,
+        @PathVariable(name = "id") id: UUID,
         @RequestBody themeRequestDto: ThemeRequestDto,
     ): Theme = themeUsecase.update(id, themeRequestDto)
 }

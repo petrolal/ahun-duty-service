@@ -21,14 +21,14 @@ class DutyModelAssembler : RepresentationModelAssembler<Duty, EntityModel<Duty>>
             .withSelfRel()
 
         val renderLink = linkTo(CardResource::class.java)
-            .slash("render")
             .slash(duty.id)
+            .slash("render")
             .withRel("card-render")
             .withType("image/png")
 
         val previewLink = linkTo(CardResource::class.java)
-            .slash("preview")
             .slash(duty.id)
+            .slash("preview")
             .withRel("card-preview")
             .withType("text/html")
 

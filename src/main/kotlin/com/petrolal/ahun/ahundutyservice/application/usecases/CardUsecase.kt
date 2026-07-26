@@ -3,13 +3,12 @@ package com.petrolal.ahun.ahundutyservice.application.usecases
 import com.petrolal.ahun.ahundutyservice.application.ports.CardRenderPort
 import com.petrolal.ahun.ahundutyservice.application.ports.CardUsecasePort
 import com.petrolal.ahun.ahundutyservice.application.ports.DutyRepositoryPort
+import com.petrolal.ahun.ahundutyservice.application.ports.FileStoragePort
 import com.petrolal.ahun.ahundutyservice.application.ports.TemplateRepositoryPort
 import com.petrolal.ahun.ahundutyservice.domain.Duty
 import com.petrolal.ahun.ahundutyservice.domain.DutyTypeEnum
 import com.petrolal.ahun.ahundutyservice.domain.Theme
-import com.petrolal.ahun.ahundutyservice.domain.exception.BadRequestException
 import com.petrolal.ahun.ahundutyservice.domain.exception.ResourceNotFoundException
-import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.text.Normalizer
@@ -29,7 +28,9 @@ class CardUsecase(
     private val dutyRepository: DutyRepositoryPort,
     private val cardRenderPort: CardRenderPort,
     private val templateRepository: TemplateRepositoryPort,
+    private val fileStoragePort: FileStoragePort,
 ) : CardUsecasePort {
+
     override fun getPreview(dutyId: UUID?): String {
         val cardData = resolveCardData(dutyId)
         val formattedDate = cardData.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
@@ -110,42 +111,32 @@ class CardUsecase(
     }
 
     private fun resolveBgImageForTheme(theme: Theme): String {
-        // 1. Query database for templates associated with this specific theme
+        // 1. Query database for templates bound to this theme ID
         val dbTemplates = templateRepository.findByThemeId(theme.id)
         if (dbTemplates.isNotEmpty()) {
             return dbTemplates.random().imagePath
         }
 
-        // 2. Matching based on normalized theme name in static images
-        val normalizedName = normalizeKey(theme.name)
-        val allStaticImages =
-            listOf(
-                "atendimento_de_cura_2.png",
-                "feijoada_dos_vovos.png",
-                "feijoada_dos_vovos_2.png",
-                "festa_de_7_saias.png",
-                "festa_de_eres_e_pretos_velhos.png",
-                "gira_de_cura_caboclos_e_boiadeiros.png",
-                "gira_de_encerramento_exu.png",
-                "gira_de_eres.png",
-                "gira_de_eres_e_cura.png",
-                "gira_de_exu_e_cura.png",
-                "gira_de_exu_e_cura_2.png",
-                "gira_de_exu_e_cura_3.png",
-                "gira_de_pretos_velhos_e_cura_2.png",
-            )
+        // 2. Query database for all templates and match by normalized name
+        val allTemplates = templateRepository.findAll()
+        val normalizedThemeName = normalizeKey(theme.name)
 
-        val matchingCandidates =
-            allStaticImages.filter { img ->
-                val imgBase = img.removeSuffix(".png").replace(Regex("_\\d+$"), "")
-                imgBase == normalizedName || normalizedName.contains(imgBase) || imgBase.contains(normalizedName)
-            }
-
-        if (matchingCandidates.isNotEmpty()) {
-            return matchingCandidates.random()
+        val matchedTemplate = allTemplates.firstOrNull { template ->
+            val cleanPath = template.imagePath.removeSuffix(".png").replace(Regex("_\\d+$"), "")
+            cleanPath == normalizedThemeName || normalizedThemeName.contains(cleanPath) || cleanPath.contains(normalizedThemeName)
         }
 
-        throw ResourceNotFoundException("No template or background image found for theme '${theme.name}' (id: ${theme.id})")
+        if (matchedTemplate != null) {
+            return matchedTemplate.imagePath
+        }
+
+        // 3. Global fallback template if database has templates
+        if (allTemplates.isNotEmpty()) {
+            return allTemplates.first().imagePath
+        }
+
+        // 4. Default static fallback image name
+        return "gira_de_exu_e_cura_2.png"
     }
 
     private fun normalizeKey(input: String): String =
@@ -157,13 +148,9 @@ class CardUsecase(
             .trim('_')
 
     private fun loadBase64Image(imageName: String): String {
-        val resource = ClassPathResource("static/images/$imageName")
-        if (resource.exists()) {
-            val bytes = resource.inputStream.readAllBytes()
-            val base64 = Base64.getEncoder().encodeToString(bytes)
-            return "data:image/png;base64,$base64"
-        }
-        throw ResourceNotFoundException("Background image file '$imageName' could not be found on server disk")
+        val bytes = fileStoragePort.loadImageAsBytes(imageName)
+        val base64 = Base64.getEncoder().encodeToString(bytes)
+        return "data:image/png;base64,$base64"
     }
 
     private fun formatSubtitle(duty: Duty): String {
