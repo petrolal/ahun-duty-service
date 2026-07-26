@@ -3,7 +3,6 @@ package com.petrolal.ahun.ahundutyservice.infrastructure.adapters.inbound.rest
 import com.petrolal.ahun.ahundutyservice.application.usecases.DutyEventUsecase
 import com.petrolal.ahun.ahundutyservice.domain.DutyEvent
 import com.petrolal.ahun.ahundutyservice.domain.dto.DutyEventRequestDto
-import com.petrolal.ahun.ahundutyservice.domain.exception.BadRequestException
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
 import java.util.UUID

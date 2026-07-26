@@ -2,7 +2,7 @@ services:
   postgres:
     image: 'postgres:latest'
     environment:
-      - 'POSTGRES_DB=ahun_card_service'
+      - 'POSTGRES_DB=ahun_duty_service'
       - 'POSTGRES_PASSWORD=ahun'
       - 'POSTGRES_USER=ahun'
     ports:

@@ -28,3 +28,12 @@ google:
 ahun:
   cards:
     templates-path: ${CARDS_TEMPLATES_PATH:/home/petrolal/Documents/AhunDocs}
+
+petrolal:
+  commons:
+    web:
+      swagger:
+        title: Ahun Duty Service
+        description: Service to generate and maintain duty
+        version: "1.0"
+

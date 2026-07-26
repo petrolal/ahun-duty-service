@@ -2,7 +2,6 @@ package com.petrolal.ahun.ahundutyservice.infrastructure.adapters.inbound.rest
 
 import com.petrolal.ahun.ahundutyservice.application.usecases.TemplateUsecase
 import com.petrolal.ahun.ahundutyservice.domain.Template
-import com.petrolal.ahun.ahundutyservice.domain.exception.BadRequestException
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType

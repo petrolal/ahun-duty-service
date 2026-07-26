@@ -4,39 +4,41 @@ plugins {
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
     alias(libs.plugins.kotlin.jpa)
+    `maven-publish`
 }
 
 group = "com.petrolal.ahun"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 description = "ahun-duty-service"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/petrolal/spring-commons-web")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR") ?: project.findProperty("gpr.user") as String?
+            password = System.getenv("GITHUB_TOKEN") ?: System.getenv("GH_PAT") ?: project.findProperty("gpr.key") as String?
+        }
+    }
 }
 
 dependencies {
-    implementation(libs.spring.boot.starter.data.jpa)
-    implementation(libs.spring.boot.starter.flyway)
+    implementation(libs.petrolal.commons.web)
     implementation(libs.spring.boot.starter.thymeleaf)
-    implementation(libs.spring.boot.starter.webmvc)
-    implementation(libs.sprint.boot.hateoas)
-    implementation(libs.flyway.database.postgresql)
     implementation(libs.xhtmlrenderer.flyingSaucerCore)
     implementation(libs.xhtmlrenderer.flyingSaucerPdfOpenpdf)
     implementation(libs.apache.pdfbox)
-    implementation(libs.kotlin.reflect)
-    implementation(libs.spring.doc.openapi)
-    implementation(libs.jackson.module.kotlin)
+
     developmentOnly(libs.spring.boot.devtools)
     developmentOnly(libs.spring.boot.docker.compose)
-    runtimeOnly(libs.postgresql)
-    testImplementation(libs.sprint.boot.starter.test)
+
+    testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.kotlin.mockito)
     testImplementation(libs.kotlin.test.junit5)
     testRuntimeOnly(libs.junit.platform.launcher)
