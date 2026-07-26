@@ -9,7 +9,6 @@ import java.util.UUID
  * Implemented by database adapters to communicate with the database.
  */
 interface DutyRepositoryPort {
-
     /**
      * Retrieves all duties from the database.
      *
@@ -40,7 +39,10 @@ interface DutyRepositoryPort {
      * @param dutyType The [DutyTypeEnum] to filter by.
      * @return List of matching [Duty]s.
      */
-    fun findByThemeNameAndDutyType(themeName: String, dutyType: DutyTypeEnum): List<Duty>
+    fun findByThemeNameAndDutyType(
+        themeName: String,
+        dutyType: DutyTypeEnum,
+    ): List<Duty>
 
     /**
      * Persists a new duty assignment.
@@ -66,7 +68,11 @@ interface DutyRepositoryPort {
      * @param month The month of the duty.
      * @return The matching [Duty] or null if not found.
      */
-    fun findCurrentMonthDutyByType(dutyType: DutyTypeEnum, year: Int, month: Int): Duty?
+    fun findCurrentMonthDutyByType(
+        dutyType: DutyTypeEnum,
+        year: Int,
+        month: Int,
+    ): Duty?
 
     /**
      * Updates an existing duty assignment.
@@ -75,5 +81,8 @@ interface DutyRepositoryPort {
      * @param duty The updated [Duty] domain object.
      * @return The updated [Duty] domain object.
      */
-    fun update(id: UUID, duty: Duty): Duty
+    fun update(
+        id: UUID,
+        duty: Duty,
+    ): Duty
 }

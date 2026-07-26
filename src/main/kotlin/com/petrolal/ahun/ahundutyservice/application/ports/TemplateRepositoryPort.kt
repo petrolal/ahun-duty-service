@@ -7,7 +7,6 @@ import java.util.UUID
  * Outbound port interface for managing [Template] persistence.
  */
 interface TemplateRepositoryPort {
-
     /**
      * Finds all templates.
      */
@@ -31,7 +30,10 @@ interface TemplateRepositoryPort {
     /**
      * Updates an existing template.
      */
-    fun update(id: UUID, template: Template): Template
+    fun update(
+        id: UUID,
+        template: Template,
+    ): Template
 
     /**
      * Deletes a template by ID.

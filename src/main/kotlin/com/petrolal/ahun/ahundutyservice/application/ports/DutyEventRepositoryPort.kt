@@ -8,7 +8,6 @@ import java.util.UUID
  * Implemented by database adapters to communicate with the database.
  */
 interface DutyEventRepositoryPort {
-
     /**
      * Retrieves all duty events from the database.
      *
@@ -47,5 +46,8 @@ interface DutyEventRepositoryPort {
      * @param event The updated [DutyEvent] domain object.
      * @return The updated [DutyEvent] domain object.
      */
-    fun update(id: UUID, event: DutyEvent): DutyEvent
+    fun update(
+        id: UUID,
+        event: DutyEvent,
+    ): DutyEvent
 }

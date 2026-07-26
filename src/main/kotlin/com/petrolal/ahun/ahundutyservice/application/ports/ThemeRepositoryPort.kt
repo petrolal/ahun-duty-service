@@ -8,7 +8,6 @@ import java.util.UUID
  * Implemented by database adapters to communicate with the database.
  */
 interface ThemeRepositoryPort {
-
     /**
      * Retrieves all themes from the database.
      *
@@ -39,7 +38,10 @@ interface ThemeRepositoryPort {
      * @param theme The updated theme information.
      * @return The updated [Theme].
      */
-    fun update(id: UUID, theme: Theme): Theme
+    fun update(
+        id: UUID,
+        theme: Theme,
+    ): Theme
 
     /**
      * Looks up a theme by its unique identifier.

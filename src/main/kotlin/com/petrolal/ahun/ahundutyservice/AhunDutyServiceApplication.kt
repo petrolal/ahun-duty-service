@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class AhunDutyServiceApplication
 
 fun main(args: Array<String>) {
-	runApplication<AhunDutyServiceApplication>(*args)
+    runApplication<AhunDutyServiceApplication>(*args)
 }
