@@ -100,7 +100,7 @@ class DutyUsecase (
             year = calculatedYear,
             events = events.toMutableSet(),
             createdAt = LocalDateTime.now(),
-            updatedAt = null
+            updatedAt = null,
         )
 
         return repository.create(duty)
@@ -115,7 +115,10 @@ class DutyUsecase (
      * @throws ResourceNotFoundException If the Duty, referenced Theme, or any referenced Event is not found.
      */
     @Transactional
-    fun update(id: UUID, requestDto: DutyRequestDto): Duty {
+    fun update(
+        id: UUID,
+        requestDto: DutyRequestDto,
+    ): Duty {
         val existingDuty = repository.findById(id)
             ?: throw ResourceNotFoundException("Duty with id $id not found")
 

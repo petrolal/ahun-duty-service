@@ -12,7 +12,7 @@ interface CardUsecasePort {
      * @param dutyId Optional specific duty UUID to render.
      * @return Processed HTML content string.
      */
-    fun getPreview(dutyId: UUID): String
+    fun getPreview(dutyId: UUID? = null): String
 
     /**
      * Renders a PNG image byte array for a card based on a specific duty ID or the actual month's GIRA_ABERTA duty.
@@ -20,5 +20,5 @@ interface CardUsecasePort {
      * @param dutyId Optional specific duty UUID to render.
      * @return PNG image byte array.
      */
-    fun renderCardPng(dutyId: UUID): ByteArray
+    fun renderCardPng(dutyId: UUID? = null): ByteArray
 }
