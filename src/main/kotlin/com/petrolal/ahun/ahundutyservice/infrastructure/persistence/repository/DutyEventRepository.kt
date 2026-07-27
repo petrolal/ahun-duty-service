@@ -59,7 +59,6 @@ class DutyEventRepository(
 
         existingEntity.name = event.name
         existingEntity.startedAt = event.startedAt
-        existingEntity.description = event.description
         existingEntity.visibleInCard = event.visibleInCard
         existingEntity.updatedAt = java.time.LocalDateTime.now()
 

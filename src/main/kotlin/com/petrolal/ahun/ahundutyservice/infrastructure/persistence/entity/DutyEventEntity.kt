@@ -24,9 +24,6 @@ class DutyEventEntity(
     @Column(nullable = false)
     var visibleInCard: Boolean,
 
-    @Column(nullable = true)
-    var description: String?,
-
     @Column(nullable = false)
     var createdAt: LocalDateTime,
 
@@ -41,7 +38,6 @@ class DutyEventEntity(
                 name = dutyEventEntity.name,
                 startedAt = dutyEventEntity.startedAt,
                 visibleInCard = dutyEventEntity.visibleInCard,
-                description = dutyEventEntity.description,
                 createdAt = dutyEventEntity.createdAt,
                 updatedAt = dutyEventEntity.updatedAt,
             )
@@ -52,7 +48,6 @@ class DutyEventEntity(
                 name = dutyEvent.name,
                 startedAt = dutyEvent.startedAt,
                 visibleInCard = dutyEvent.visibleInCard,
-                description = dutyEvent.description,
                 createdAt = dutyEvent.createdAt,
                 updatedAt = dutyEvent.updatedAt
             )

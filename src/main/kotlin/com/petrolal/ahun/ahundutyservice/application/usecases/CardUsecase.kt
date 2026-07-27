@@ -90,7 +90,6 @@ class CardUsecase(
                     CardEventData(
                         name = event.name,
                         time = timeStr,
-                        description = event.description,
                         visibleInCard = event.visibleInCard,
                     )
                 }
@@ -142,23 +141,5 @@ class CardUsecase(
         val bytes = fileStoragePort.loadImageAsBytes(imageName)
         val base64 = Base64.getEncoder().encodeToString(bytes)
         return "data:image/png;base64,$base64"
-    }
-
-    private fun formatSubtitle(duty: Duty): String {
-        val dateFormatter = DateTimeFormatter.ofPattern("EEEE | d 'DE' MMMM", Locale.of("pt", "BR"))
-        val dateStr = duty.date.format(dateFormatter).uppercase()
-
-        val visibleEvent =
-            duty.events.filter { it.visibleInCard }.minByOrNull { it.startedAt }
-                ?: duty.events.minByOrNull { it.startedAt }
-
-        return if (visibleEvent != null) {
-            val hour = visibleEvent.startedAt.hour
-            val minute = visibleEvent.startedAt.minute
-            val timeStr = if (minute == 0) "${hour}H" else "${hour}H${minute.toString().padStart(2, '0')}"
-            "$dateStr - $timeStr"
-        } else {
-            dateStr
-        }
     }
 }

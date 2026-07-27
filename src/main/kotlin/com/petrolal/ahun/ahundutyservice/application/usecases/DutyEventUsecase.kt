@@ -45,7 +45,6 @@ class DutyEventUsecase(
                 name = it.name,
                 startedAt = it.startedAt,
                 visibleInCard = it.visibleInCard,
-                description = it.description,
                 createdAt = LocalDateTime.now(),
                 updatedAt = null
             )
@@ -81,7 +80,6 @@ class DutyEventUsecase(
         val updated = existing.copy(
             name = requestDto.name,
             startedAt = requestDto.startedAt,
-            description = requestDto.description,
             visibleInCard = requestDto.visibleInCard,
             updatedAt = LocalDateTime.now()
         )

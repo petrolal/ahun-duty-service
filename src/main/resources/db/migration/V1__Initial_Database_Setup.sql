@@ -24,7 +24,6 @@ CREATE TABLE duty_events
     name            VARCHAR(255) NOT NULL,
     started_at      time WITHOUT TIME ZONE      NOT NULL,
     visible_in_card BOOLEAN      NOT NULL,
-    description     VARCHAR(255),
     created_at      TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     updated_at      TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_duty_events PRIMARY KEY (id)
@@ -38,6 +37,15 @@ CREATE TABLE theme
     created_at  TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     updated_at  TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_theme PRIMARY KEY (id)
+);
+
+-- Create template table to store background templates associated with themes
+CREATE TABLE template (
+    id UUID PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    image_path VARCHAR(255) NOT NULL,
+    theme_id UUID REFERENCES theme(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE duties

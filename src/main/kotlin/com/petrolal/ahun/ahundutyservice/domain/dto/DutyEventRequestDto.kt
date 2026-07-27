@@ -13,6 +13,5 @@ import java.time.LocalTime
 data class DutyEventRequestDto(
     var name: String,
     var startedAt: LocalTime,
-    var description: String? = null,
     var visibleInCard: Boolean,
 )
