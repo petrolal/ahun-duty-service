@@ -55,7 +55,8 @@ class CardUsecaseTest {
         whenever(cardRenderPort.renderHtml(any(), any()))
             .thenReturn("<html>GIRA DE EXU E CURA</html>")
 
-        val html = cardUsecase.getPreview()
+        val result = cardUsecase.generateCard(render = false) as CardReturn.Preview
+        val html = result.html
 
         assertNotNull(html)
         assertTrue(html.contains("GIRA DE EXU E CURA"))
@@ -67,7 +68,7 @@ class CardUsecaseTest {
             .thenReturn(null)
 
         assertThrows(ResourceNotFoundException::class.java) {
-            cardUsecase.getPreview()
+            cardUsecase.generateCard(render = false)
         }
     }
 
@@ -91,7 +92,8 @@ class CardUsecaseTest {
         whenever(cardRenderPort.renderPng(any(), any()))
             .thenReturn(byteArrayOf(1, 2, 3))
 
-        val bytes = cardUsecase.renderCardPng(dutyId = dutyId)
+        val result = cardUsecase.generateCard(dutyId = dutyId, render = true) as CardReturn.Render
+        val bytes = result.png
 
         assertNotNull(bytes)
         assertEquals(3, bytes.size)
@@ -120,7 +122,8 @@ class CardUsecaseTest {
         whenever(templateRepository.findByThemeId(theme.id)).thenReturn(listOf(t1, t2))
         whenever(cardRenderPort.renderPng(any(), any())).thenReturn(byteArrayOf(5, 6, 7))
 
-        val bytes = cardUsecase.renderCardPng(dutyId = dutyId)
+        val result = cardUsecase.generateCard(dutyId = dutyId, render = true) as CardReturn.Render
+        val bytes = result.png
 
         assertNotNull(bytes)
         verify(templateRepository).findByThemeId(theme.id)
@@ -146,7 +149,7 @@ class CardUsecaseTest {
         whenever(dutyRepository.findById(dutyId)).thenReturn(duty)
         whenever(cardRenderPort.renderHtml(any(), any())).thenReturn("<html>Preview</html>")
 
-        cardUsecase.getPreview(dutyId = dutyId)
+        cardUsecase.generateCard(dutyId = dutyId, render = false)
 
         val captor = argumentCaptor<Map<String, Any>>()
         verify(cardRenderPort).renderHtml(eq("preview_card_template"), captor.capture())

@@ -11,13 +11,13 @@ import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.IanaLinkRelations
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.UUID
+import java.util.*
 
 /**
  * Inbound REST controller for managing Duty assignments.
  * Exposes endpoints for listing, finding, creating, and updating duty assignments with HATEOAS hypermedia controls.
  */
-@Tag(name = "Duties", description = "The endpoint to manage duties")
+@Tag(name = "Duty", description = "The endpoint to manage duties")
 @RestController
 @RequestMapping("/duty")
 class DutyResource(
@@ -59,7 +59,6 @@ class DutyResource(
 
     /**
      * Endpoint to create a new duty assignment.
-     * Supports both existing event IDs and composite inline events.
      * Returns HTTP 201 Created with a Location header and HATEOAS HAL representation.
      */
     @PostMapping

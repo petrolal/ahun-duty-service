@@ -26,7 +26,7 @@
             overflow: hidden;
         }
     </style>
-    <style th:replace="~{fragments/card_components :: cardStyles}"></style>
+    <style th:replace="~{fragments/card_components_two_events :: cardStyles}"></style>
 </head>
 <body>
 
@@ -34,7 +34,7 @@
      th:style="${bgImageDataUri != null and !bgImageDataUri.isEmpty()} ? 'background-image: url(' + ${bgImageDataUri} + ');' : 'background-image: url(/images/' + (${bgImageName != null ? bgImageName : 'gira_de_exu_e_cura_2.png'}) + ');'">
 
     <!-- Reusable Card Fields Fragment -->
-    <div th:replace="~{fragments/card_components :: cardFields}"></div>
+    <div th:replace="~{fragments/card_components_two_events :: cardFields}"></div>
 
 </div>
 

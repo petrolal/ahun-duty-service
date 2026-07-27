@@ -11,6 +11,24 @@ group = "com.petrolal.ahun"
 version = "0.0.1"
 description = "ahun-duty-service"
 
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/petrolal/ahun-duty-service")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR") ?: "petrolal"
+                password = System.getenv("GITHUB_TOKEN") ?: System.getenv("GH_PAT")
+            }
+        }
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -18,12 +36,13 @@ java {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url = uri("https://maven.pkg.github.com/petrolal/spring-commons-web")
         credentials {
-            username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
+            username = System.getenv("GITHUB_ACTOR") ?: "petrolal"
+            password = System.getenv("GITHUB_TOKEN") ?: System.getenv("GH_PAT")
         }
     }
 }
@@ -35,18 +54,13 @@ dependencies {
     implementation(libs.xhtmlrenderer.flyingSaucerPdfOpenpdf)
     implementation(libs.apache.pdfbox)
 
-    developmentOnly(libs.spring.boot.devtools)
-    developmentOnly(libs.spring.boot.docker.compose)
-
-    testImplementation(libs.spring.boot.starter.test)
     testImplementation(libs.kotlin.mockito)
     testImplementation(libs.kotlin.test.junit5)
-    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
+        freeCompilerArgs.addAll("-Xjsr305=strict")
     }
 }
 

@@ -1,6 +1,7 @@
 package com.petrolal.ahun.ahundutyservice.infrastructure.adapters.inbound.rest
 
 import com.petrolal.ahun.ahundutyservice.application.ports.CardUsecasePort
+import com.petrolal.ahun.ahundutyservice.domain.CardReturn
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
@@ -26,8 +27,8 @@ class CardResourceTest {
     @Test
     fun `GET cards preview with dutyId path variable should return HTML string`() {
         val dutyId = UUID.randomUUID()
-        whenever(cardUsecasePort.getPreview(eq(dutyId)))
-            .thenReturn("<html>Preview for Duty</html>")
+        whenever(cardUsecasePort.generateCard(eq(dutyId), eq(false)))
+            .thenReturn(CardReturn.Preview("<html>Preview for Duty</html>"))
 
         mockMvc.perform(get("/cards/$dutyId/preview"))
             .andExpect(status().isOk)
@@ -38,8 +39,8 @@ class CardResourceTest {
     fun `GET cards render with dutyId path variable should render and download PNG`() {
         val dutyId = UUID.randomUUID()
         val dummyPng = byteArrayOf(1, 2, 3, 4)
-        whenever(cardUsecasePort.renderCardPng(eq(dutyId)))
-            .thenReturn(dummyPng)
+        whenever(cardUsecasePort.generateCard(eq(dutyId), eq(true)))
+            .thenReturn(CardReturn.Render(dummyPng))
 
         mockMvc.perform(get("/cards/$dutyId/render"))
             .andExpect(status().isOk)

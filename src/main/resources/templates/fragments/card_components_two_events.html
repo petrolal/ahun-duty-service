@@ -11,8 +11,10 @@
 
         /* Position container over card text boxes */
         .fields-container {
+            opacity: 0.3;
+            background-color: red;
             position: absolute;
-            top: 455px;
+            top: 540px;
             left: 0;
             display: flex;
             flex-direction: column;
@@ -31,6 +33,7 @@
             text-align: center;
             color: #3a1e05;
             width: 960px;
+            height: 92px;
             margin: 0 auto 10px auto;
         }
 
@@ -44,17 +47,8 @@
             width: 100%;
         }
 
-        .events-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            width: 960px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
         .event-item {
+            background-color: rebeccapurple;
             font-size: 40px;
             font-weight: 600;
             color: #3a1e05;
@@ -62,6 +56,7 @@
             align-items: center;
             justify-content: center;
             width: 960px;
+            height: 111px;
             margin: 0 auto 15px auto;
             text-align: center;
             padding: 10px;
@@ -80,8 +75,6 @@
 
 <!-- Shared Card Fields Fragment -->
 <div th:fragment="cardFields" class="fields-container">
-        <!-- Lista de Eventos -->
-    <div class="events-container" th:if="${events != null and !events.empty}">
         <!-- Campo Data -->
         <div class="date-box" th:if="${date != null and !date.empty}">
             <span class="date-text" th:text="${date}"></span>
@@ -92,8 +85,11 @@
             <span class="event-separator">-</span>
             <span class="event-time" th:text="${event.time}"></span>
         </div>
+
+        <div class="information-box">
+            <span class="date-text" th:text="${date}"></span>
+        </div>
     </div>
-</div>
 
 </body>
 </html>

@@ -1,10 +1,7 @@
 package com.petrolal.ahun.ahundutyservice.application.usecases
 
-import com.petrolal.ahun.ahundutyservice.application.ports.CardRenderPort
-import com.petrolal.ahun.ahundutyservice.application.ports.CardUsecasePort
-import com.petrolal.ahun.ahundutyservice.application.ports.DutyRepositoryPort
-import com.petrolal.ahun.ahundutyservice.application.ports.FileStoragePort
-import com.petrolal.ahun.ahundutyservice.application.ports.TemplateRepositoryPort
+import com.petrolal.ahun.ahundutyservice.application.ports.*
+import com.petrolal.ahun.ahundutyservice.domain.CardReturn
 import com.petrolal.ahun.ahundutyservice.domain.Duty
 import com.petrolal.ahun.ahundutyservice.domain.DutyTypeEnum
 import com.petrolal.ahun.ahundutyservice.domain.Theme
@@ -14,9 +11,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.text.Normalizer
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Base64
-import java.util.Locale
-import java.util.UUID
+import java.util.*
+
 
 /**
  * Application service orchestrating Card generation business logic.
@@ -31,7 +27,7 @@ class CardUsecase(
     private val fileStoragePort: FileStoragePort,
 ) : CardUsecasePort {
 
-    override fun getPreview(dutyId: UUID?): String {
+    override fun generateCard(dutyId: UUID?, render: Boolean): CardReturn  {
         val cardData = resolveCardData(dutyId)
         val formattedDate = cardData.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         val variables =
@@ -42,21 +38,16 @@ class CardUsecase(
                 "bgImageDataUri" to cardData.bgImageDataUri,
                 "date" to formattedDate,
             )
-        return cardRenderPort.renderHtml("preview_card_template", variables)
-    }
 
-    override fun renderCardPng(dutyId: UUID?): ByteArray {
-        val cardData = resolveCardData(dutyId)
-        val formattedDate = cardData.date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-        val variables =
-            mapOf(
-                "dutyId" to (dutyId?.toString() ?: ""),
-                "events" to cardData.events,
-                "bgImageName" to cardData.bgImageName,
-                "bgImageDataUri" to cardData.bgImageDataUri,
-                "date" to formattedDate,
+        if (!render) {
+            return CardReturn.Preview(
+                cardRenderPort.renderHtml("preview_card_template", variables)
             )
-        return cardRenderPort.renderPng("2_fields_template", variables)
+        }
+
+        return CardReturn.Render(
+            cardRenderPort.renderPng("2_fields_template", variables)
+        )
     }
 
     data class CardEventData(

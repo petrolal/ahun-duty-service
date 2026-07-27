@@ -13,8 +13,7 @@ import java.util.*
  * @property date The date when the duty is scheduled.
  * @property period Optional academic semester/period of the duty (automatically derived from date if omitted).
  * @property description Optional descriptive text about the duty.
- * @property eventIds List of unique identifiers of associated [com.petrolal.ahun.ahundutyservice.domain.DutyEvent]s.
- * @property inlineEvents Optional inline event objects to create and attach in a single transaction.
+ * @property eventIds List of unique identifiers of associated [com.petrolal.ahun.ahundutyservice.domain.DutyEvent].
  */
 data class DutyRequestDto(
     val themeId: UUID,
@@ -23,5 +22,4 @@ data class DutyRequestDto(
     val period: SemesterEnum? = null,
     val description: String? = null,
     val eventIds: List<UUID> = emptyList(),
-    val inlineEvents: List<DutyEventRequestDto>? = null,
 )

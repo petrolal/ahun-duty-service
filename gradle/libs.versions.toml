@@ -5,17 +5,12 @@ springDependencyManagement = "1.1.7"
 pdfbox = "3.0.4"
 flyingSaucerCore = "9.1.22"
 kotlinMockito = "5.4.0"
-springCommonsWeb = "2.2.0"
+springCommonsWeb = "2.4.0"
 
 [libraries]
 # Spring Boot Starters & Database
 spring-boot-starter-thymeleaf = { group = "org.springframework.boot", name = "spring-boot-starter-thymeleaf" }
-spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
 kotlin-mockito = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "kotlinMockito" }
-
-# Spring Boot Dev / Compose
-spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
-spring-boot-docker-compose = { group = "org.springframework.boot", name = "spring-boot-docker-compose" }
 
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5" }
 petrolal-commons-web = { module = "com.petrolal.commons.web:spring-commons-web", version.ref = "springCommonsWeb" }
@@ -24,9 +19,6 @@ petrolal-commons-web = { module = "com.petrolal.commons.web:spring-commons-web",
 xhtmlrenderer-flyingSaucerCore = { group = "org.xhtmlrenderer", name = "flying-saucer-core", version.ref = "flyingSaucerCore" }
 xhtmlrenderer-flyingSaucerPdfOpenpdf = { group = "org.xhtmlrenderer", name = "flying-saucer-pdf-openpdf", version.ref = "flyingSaucerCore" }
 apache-pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" }
-
-# Test dependencies
-junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

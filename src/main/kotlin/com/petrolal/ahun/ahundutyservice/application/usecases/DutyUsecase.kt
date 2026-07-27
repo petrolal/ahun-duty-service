@@ -98,29 +98,12 @@ class DutyUsecase(
     }
 
     private fun resolveEvents(requestDto: DutyRequestDto): List<DutyEvent> {
-        val existingEvents = if (requestDto.eventIds.isNotEmpty()) {
+        return if (requestDto.eventIds.isNotEmpty()) {
             val fetched = repositoryDutyEvent.findAllById(requestDto.eventIds)
             if (fetched.size != requestDto.eventIds.size) {
                 throw ResourceNotFoundException("One or more events not found")
             }
             fetched
         } else emptyList()
-
-        val createdInlineEvents = if (!requestDto.inlineEvents.isNullOrEmpty()) {
-            val domainInline = requestDto.inlineEvents.map {
-                DutyEvent(
-                    id = UUID.randomUUID(),
-                    name = it.name,
-                    startedAt = it.startedAt,
-                    visibleInCard = it.visibleInCard,
-                    description = it.description,
-                    createdAt = LocalDateTime.now(),
-                    updatedAt = null
-                )
-            }
-            repositoryDutyEvent.create(domainInline)
-        } else emptyList()
-
-        return existingEvents + createdInlineEvents
     }
 }
