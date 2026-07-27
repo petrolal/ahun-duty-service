@@ -13,12 +13,12 @@ INSERT INTO theme (id, name, description, created_at) VALUES
 ('3410a41b-f54f-49e8-88ab-bfeb40f8f838', 'Gira de Pretos Velhos e Cura', 'Template background: gira_de_pretos_velhos_e_cura_2.png', CURRENT_TIMESTAMP);
 
 -- Seed duty_events matching schema (id, name, started_at, visible_in_card, description, created_at, updated_at)
-INSERT INTO duty_events (id, name, started_at, visible_in_card, description, created_at, updated_at) VALUES
+INSERT INTO duty_events (id, name, started_at, visible_in_card, created_at, updated_at) VALUES
 ('4f084b7a-2db2-4174-9b9d-c764fc1f04db', 'Chegada na casa', '09:00:00', false, '2026-07-21 23:16:23.021801', CURRENT_TIMESTAMP),
 ('9aa17c2a-65bd-4a38-9f61-68080c187791', 'Café da manhã', '09:30:00', false, '2026-07-21 23:17:01.110171', CURRENT_TIMESTAMP),
 ('677a243b-9ffa-43d0-9187-afe275e93fda', 'Almoço', '12:00:00', false, '2026-07-21 23:17:29.921157', CURRENT_TIMESTAMP),
 ('d4dd41cd-9354-4788-b3c7-8f7fee416fd4', 'Gira de Exu e Pombigira', '16:00:00', true, '2026-07-21 23:19:02.714366', CURRENT_TIMESTAMP),
-('4c41fb7c-d704-4a06-9af8-eac2a204e9f5', 'Gira de Pretos Velhos', '16:00:00', true, 'Inicio da gira de Pretos Velhos', '2026-07-21 23:19:16.932076', CURRENT_TIMESTAMP),
+('4c41fb7c-d704-4a06-9af8-eac2a204e9f5', 'Gira de Pretos Velhos', '16:00:00', true, '2026-07-21 23:19:16.932076', CURRENT_TIMESTAMP),
 ('d073e891-6010-4323-85cc-11d108fe35f4', 'Gira de Erês', '16:00:00', true, '2026-07-21 23:19:34.348086', CURRENT_TIMESTAMP),
 ('fb129a8f-eb7f-45fc-aec1-de35617f1669', 'Gira de Erês e Pretos Velhos', '16:00:00', true, '2026-07-21 23:19:47.289486', CURRENT_TIMESTAMP),
 ('0dc8f08b-d8ef-4620-8d0a-f45c943703a3', 'Gira de Caboclos e Boiadeiros', '16:00:00', true, '2026-07-21 23:20:04.589951', CURRENT_TIMESTAMP),

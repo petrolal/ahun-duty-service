@@ -11,55 +11,62 @@
 
         /* Position container over card text boxes */
         .fields-container {
-            opacity: 0.3;
-            background-color: red;
             position: absolute;
-            top: 540px;
+            top: 535px;
             left: 0;
             display: flex;
             flex-direction: column;
             width: 1080px;
-            height: 601px;
+            height: 622px;
             align-items: center;
             justify-content: center;
             text-align: center;
+            gap: 41px;
             padding: 20px 60px 41px 60px;
         }
 
-        .date-box {
+        .date-text {
             display: flex;
-            align-items: baseline;
             justify-content: center;
             text-align: center;
             color: #3a1e05;
             width: 960px;
             height: 92px;
-            margin: 0 auto 10px auto;
+            font-size: 64px;
+            font-weight: bold;
+            line-height: 96.8%;
         }
 
-        .date-text {
-            font-size: 64px;
-            color: #3a1e05;
+        .information-text {
+            font-size: 40px;
             font-weight: bold;
-            letter-spacing: 1px;
             text-align: center;
-            display: inline-block;
-            width: 100%;
+            color: #6B3002;
+            width: 575px;
+            height: 123px;
+            margin-top: -10px; /* Pushes element strictly to the bottom */
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.2px;
         }
 
         .event-item {
-            background-color: rebeccapurple;
-            font-size: 40px;
+            font-size: 44px;
             font-weight: 600;
             color: #3a1e05;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 960px;
-            height: 111px;
-            margin: 0 auto 15px auto;
+            height: 110px;
             text-align: center;
             padding: 10px;
+        }
+
+        .event-separator {
+            margin: 0 12px;
         }
 
         .event-time {
@@ -76,9 +83,7 @@
 <!-- Shared Card Fields Fragment -->
 <div th:fragment="cardFields" class="fields-container">
         <!-- Campo Data -->
-        <div class="date-box" th:if="${date != null and !date.empty}">
-            <span class="date-text" th:text="${date}"></span>
-        </div>
+        <span class="date-text" th:text="${date}"></span>
 
         <div class="event-item" th:each="event : ${events}" th:if="${event.visibleInCard}">
             <span class="event-name" th:text="${event.name}"></span>
@@ -86,10 +91,8 @@
             <span class="event-time" th:text="${event.time}"></span>
         </div>
 
-        <div class="information-box">
-            <span class="date-text" th:text="${date}"></span>
-        </div>
-    </div>
+        <span class="information-text" th:text="${description}"></span>
+</div>
 
 </body>
 </html>

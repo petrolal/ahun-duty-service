@@ -2,7 +2,6 @@ package com.petrolal.ahun.ahundutyservice.application.usecases
 
 import com.petrolal.ahun.ahundutyservice.application.ports.*
 import com.petrolal.ahun.ahundutyservice.domain.CardReturn
-import com.petrolal.ahun.ahundutyservice.domain.Duty
 import com.petrolal.ahun.ahundutyservice.domain.DutyTypeEnum
 import com.petrolal.ahun.ahundutyservice.domain.Theme
 import com.petrolal.ahun.ahundutyservice.domain.exception.ResourceNotFoundException
@@ -34,6 +33,7 @@ class CardUsecase(
             mapOf(
                 "dutyId" to (dutyId?.toString() ?: ""),
                 "events" to cardData.events,
+                "description" to cardData.description,
                 "bgImageName" to cardData.bgImageName,
                 "bgImageDataUri" to cardData.bgImageDataUri,
                 "date" to formattedDate,
@@ -53,7 +53,6 @@ class CardUsecase(
     data class CardEventData(
         val name: String,
         val time: String,
-        val description: String? = null,
         val visibleInCard: Boolean = true,
     )
 
@@ -62,6 +61,7 @@ class CardUsecase(
         val bgImageName: String,
         val bgImageDataUri: String,
         val date: LocalDate,
+        val description: String,
     )
 
     private fun resolveCardData(dutyId: UUID?): CardData {
@@ -96,8 +96,9 @@ class CardUsecase(
 
         val bgImageName = resolveBgImageForTheme(duty.theme)
         val bgImageDataUri = loadBase64Image(bgImageName)
+        val description = duty.description ?: ""
 
-        return CardData(eventsData, bgImageName, bgImageDataUri, date)
+        return CardData(eventsData, bgImageName, bgImageDataUri, date, description)
     }
 
     private fun resolveBgImageForTheme(theme: Theme): String {
