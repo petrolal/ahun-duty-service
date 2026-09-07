@@ -14,8 +14,8 @@ output "app_service_account_email" {
 }
 
 output "github_actions_service_account_email" {
-  description = "The Service Account email for GitHub Actions deployment"
-  value       = google_service_account.github_actions_sa.email
+  description = "The Service Account email for GitHub Actions deployment (provisioned in the shared IaC repo)"
+  value       = var.github_actions_sa_email
 }
 
 output "messaging_trigger_url" {
