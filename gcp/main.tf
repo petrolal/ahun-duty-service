@@ -43,11 +43,12 @@ locals {
 module "cloud_run" {
   source = "./modules/cloud_run"
 
-  project_id      = var.project_id
-  region          = var.region
-  service_name    = "ahun-duty-service"
-  env_vars        = local.env_vars
-  secret_env_vars = local.secret_env_vars
+  project_id              = var.project_id
+  region                  = var.region
+  service_name            = "ahun-duty-service"
+  github_actions_sa_email = var.github_actions_sa_email
+  env_vars                = local.env_vars
+  secret_env_vars         = local.secret_env_vars
 
   # No Cloud Scheduler jobs for the duty service yet.
   scheduler_jobs = {}

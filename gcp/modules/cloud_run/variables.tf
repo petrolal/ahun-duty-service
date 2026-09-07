@@ -13,6 +13,11 @@ variable "project_id" {
   type        = string
 }
 
+variable "github_actions_sa_email" {
+  description = "Email of the GitHub Actions CI/CD service account, provisioned in the shared IaC repo (ahun-cloud-env) via Workload Identity Federation. Granted actAs on the runtime SA so the pipeline can deploy new revisions."
+  type        = string
+}
+
 # --- Application Configuration Variables ---
 
 variable "env_vars" {

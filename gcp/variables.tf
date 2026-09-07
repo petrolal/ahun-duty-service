@@ -9,6 +9,12 @@ variable "region" {
   default     = "us-central1"
 }
 
+variable "github_actions_sa_email" {
+  description = "Email of the GitHub Actions CI/CD service account (shared IaC output github_actions_sa_emails[\"ahun-duty-service\"]). Passed by the pipeline as TF_VAR_github_actions_sa_email; also the value of the WIF_SERVICE_ACCOUNT secret."
+  type        = string
+  default     = ""
+}
+
 # --- Application configuration (injected by the pipeline as TF_VAR_*) ---
 
 variable "spring_datasource_url" {

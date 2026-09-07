@@ -17,6 +17,10 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   test:
     name: Test & Verify (kotlin)
@@ -36,3 +40,6 @@ jobs:
 
       - name: Run Tests and Verification
         run: ./gradlew check test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}

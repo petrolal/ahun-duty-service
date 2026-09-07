@@ -27,31 +27,15 @@ resource "google_secret_manager_secret_iam_member" "secret_accessor" {
   member    = "serviceAccount:${google_service_account.app_sa.email}"
 }
 
-# Service Account for GitHub Actions CI/CD deployment
-resource "google_service_account" "github_actions_sa" {
-  account_id   = "${var.service_name}-github-sa"
-  display_name = "GitHub Actions CI/CD Deployment SA for ${var.service_name}"
-}
-
-# Grant Artifact Registry Writer
-resource "google_project_iam_member" "github_sa_registry" {
-  project = var.project_id
-  role    = "roles/artifactregistry.writer"
-  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
-}
-
-# Grant Cloud Run Developer
-resource "google_project_iam_member" "github_sa_run" {
-  project = var.project_id
-  role    = "roles/run.developer"
-  member  = "serviceAccount:${google_service_account.github_actions_sa.email}"
-}
-
-# Allow GitHub SA to act as the runtime service account
+# The GitHub Actions CI/CD identity itself (service account + Workload Identity
+# Federation + artifactregistry.writer + run.developer) is provisioned in the
+# shared IaC repo (ahun-cloud-env, module.github_actions_oidc), the only root
+# applied with human credentials. This root just grants it actAs on the runtime
+# SA it owns, so the pipeline can roll out new Cloud Run revisions.
 resource "google_service_account_iam_member" "github_sa_act_as_app" {
   service_account_id = google_service_account.app_sa.name
   role               = "roles/iam.serviceAccountUser"
-  member             = "serviceAccount:${google_service_account.github_actions_sa.email}"
+  member             = "serviceAccount:${var.github_actions_sa_email}"
 }
 
 # Allow unauthenticated (public) access to the service
