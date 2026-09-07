@@ -37,3 +37,13 @@ out/
 ### VS Code ###
 .vscode/
 src/main/resources/credentials/credentials.json
+
+### Terraform (gcp/) ###
+gcp/**/.terraform/*
+gcp/**/.terraform.lock.hcl
+gcp/**/*.tfstate
+gcp/**/*.tfstate.*
+gcp/**/*.tfvars
+gcp/**/*.tfvars.json
+gcp/**/crash.log
+gcp/**/crash.*.log
