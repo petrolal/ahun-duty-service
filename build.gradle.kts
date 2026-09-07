@@ -55,7 +55,10 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.petrolal.commons.web)
+    implementation(libs.petrolal.commons.web) {
+        exclude(group = "org.springframework.boot", module = "spring-boot-docker-compose")
+        exclude(group = "org.springframework.boot", module = "spring-boot-devtools")
+    }
     implementation(libs.spring.boot.starter.thymeleaf)
     implementation(libs.xhtmlrenderer.flyingSaucerCore)
     implementation(libs.xhtmlrenderer.flyingSaucerPdfOpenpdf)
