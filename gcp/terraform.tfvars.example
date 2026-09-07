@@ -5,7 +5,7 @@ project_id = "casa-ahun"
 region     = "us-central1"
 
 # From the shared IaC repo: terraform output spring_datasource_urls
-spring_datasource_url      = "jdbc:postgresql://db.<duty-ref>.supabase.co:5432/ahun_duty_service"
+spring_datasource_url      = "jdbc:postgresql://db.<duty-ref>.supabase.co:5432/postgres?currentSchema=duty"
 spring_datasource_password = "your-supabase-db-password"
 
 telegram_chat_id = "-1001234567890"

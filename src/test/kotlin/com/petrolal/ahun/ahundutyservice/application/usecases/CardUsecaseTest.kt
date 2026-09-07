@@ -36,7 +36,7 @@ class CardUsecaseTest {
     @Test
     fun `should generate preview for actual month GIRA_ABERTA duty when no dutyId is provided`() {
         val theme = Theme(UUID.randomUUID(), "Gira de Exu e Cura", null, LocalDateTime.now())
-        val event = DutyEvent(UUID.randomUUID(), "Início", LocalTime.of(18, 0), null, true, LocalDateTime.now())
+        val event = DutyEvent(UUID.randomUUID(), "Início", LocalTime.of(18, 0), true, LocalDateTime.now())
         val duty = Duty(
             id = UUID.randomUUID(),
             theme = theme,
@@ -133,8 +133,8 @@ class CardUsecaseTest {
     fun `should pass formatted event list to template variables`() {
         val dutyId = UUID.randomUUID()
         val theme = Theme(UUID.randomUUID(), "Gira de Exu", null, LocalDateTime.now())
-        val e1 = DutyEvent(UUID.randomUUID(), "Portões", LocalTime.of(17, 30), null, true, LocalDateTime.now())
-        val e2 = DutyEvent(UUID.randomUUID(), "Abertura", LocalTime.of(18, 0), null, true, LocalDateTime.now())
+        val e1 = DutyEvent(UUID.randomUUID(), "Portões", LocalTime.of(17, 30), true, LocalDateTime.now())
+        val e2 = DutyEvent(UUID.randomUUID(), "Abertura", LocalTime.of(18, 0), true, LocalDateTime.now())
         val duty = Duty(
             id = dutyId,
             theme = theme,

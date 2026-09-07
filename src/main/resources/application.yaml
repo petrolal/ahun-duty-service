@@ -1,25 +1,39 @@
+server:
+  forward-headers-strategy: framework
+
 spring:
   application:
     name: ahun-duty-service
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/ahun_duty}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=duty}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
+      schema: duty
 
   flyway:
     clean-on-validation-error: true
+    schemas: duty
+    default-schema: duty
+    create-schemas: true
 
   jpa:
     open-in-view: false
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: duty
 ahun:
   cards:
     templates-path: ${CARDS_TEMPLATES_PATH:/home/petrolal/Documents/AhunDocs}
+
+telegram:
+  bot-token: ${TELEGRAM_BOT_TOKEN:}
+  chat-id: ${TELEGRAM_CHAT_ID:}
 
 petrolal:
   commons:

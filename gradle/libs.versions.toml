@@ -13,7 +13,7 @@ spring-boot-starter-thymeleaf = { group = "org.springframework.boot", name = "sp
 kotlin-mockito = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "kotlinMockito" }
 
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5" }
-petrolal-commons-web = { module = "com.petrolal.commons.web:spring-commons-web", version.ref = "springCommonsWeb" }
+petrolal-commons-web = { module = "com.petrolal.commons.web:commons-web", version.ref = "springCommonsWeb" }
 
 # Card generation
 xhtmlrenderer-flyingSaucerCore = { group = "org.xhtmlrenderer", name = "flying-saucer-core", version.ref = "flyingSaucerCore" }

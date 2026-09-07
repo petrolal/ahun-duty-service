@@ -4,11 +4,14 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+    hikari:
+      schema: PUBLIC
   jpa:
     hibernate:
       ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+        default_schema: PUBLIC
   flyway:
     enabled: false
