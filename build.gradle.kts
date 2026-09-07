@@ -41,8 +41,15 @@ repositories {
     maven {
         url = uri("https://maven.pkg.github.com/petrolal/spring-commons-web")
         credentials {
-            username = System.getenv("GITHUB_ACTOR") ?: "petrolal"
-            password = System.getenv("GITHUB_TOKEN") ?: System.getenv("GH_PAT")
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR") ?: "petrolal"
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN") ?: System.getenv("GH_PAT")
+        }
+    }
+    maven {
+        url = uri("https://maven.pkg.github.com/petrolal/commons-web")
+        credentials {
+            username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR") ?: "petrolal"
+            password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN") ?: System.getenv("GH_PAT")
         }
     }
 }

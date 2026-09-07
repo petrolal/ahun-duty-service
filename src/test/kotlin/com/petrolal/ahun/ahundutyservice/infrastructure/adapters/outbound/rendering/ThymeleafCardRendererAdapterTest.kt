@@ -36,7 +36,7 @@ class ThymeleafCardRendererAdapterTest {
             "bgImageDataUri" to bgBase64
         )
 
-        val imageBytes = cardRendererAdapter.renderPng("2_fields_template", variables)
+        val imageBytes = cardRendererAdapter.renderPng("preview_card_template", variables)
         assertNotNull(imageBytes)
 
         val bufferedImage = ImageIO.read(ByteArrayInputStream(imageBytes))

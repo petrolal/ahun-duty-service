@@ -46,7 +46,7 @@ class CardUsecase(
         }
 
         return CardReturn.Render(
-            cardRenderPort.renderPng("2_fields_template", variables)
+            cardRenderPort.renderPng("preview_card_template", variables)
         )
     }
 
